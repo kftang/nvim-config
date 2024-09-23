@@ -1,5 +1,3 @@
--- for debugging
-
 return {
 
   -- https://github.com/sainnhe/gruvbox-material

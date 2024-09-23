@@ -88,7 +88,7 @@ vim.api.nvim_create_user_command('Resource', 'source ' .. vim.fn.stdpath 'config
 vim.api.nvim_create_user_command('SaveSession', 'mksession! .session.vim', {})
 vim.api.nvim_create_user_command('SS', 'SaveSession', {})
 
--- Opens a diff of the current buffer ran through autopep8 (--agressive)
+-- Opens a diff of the current buffer ran through ruff
 vim.api.nvim_create_user_command('DiffRuff', function()
   local file_path = vim.fn.expand '%'
   local temp_file = vim.fn.tempname()
