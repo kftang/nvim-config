@@ -82,6 +82,15 @@ local opts = { noremap = true, silent = true }
 -- toggle wrap
 vim.keymap.set('n', '<leader>tw', function() vim.o.wrap = not vim.o.wrap end, opts)
 
+-- copy path to buffer
+local function copy_buffer_path()
+  local buffer_path = vim.fn.expand('%:p')
+  -- copy to unnamed (for using p) and *
+  vim.fn.setreg('"', buffer_path)
+  vim.fn.setreg('*', buffer_path)
+end
+vim.keymap.set('n', '<leader>cf', copy_buffer_path, opts)
+
 -- User commands
 
 -- p4 commands

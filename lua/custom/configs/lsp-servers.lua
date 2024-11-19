@@ -47,10 +47,11 @@ return {
     volar = {},
     ts_ls = {
       init_options = {
+        hostInfo = 'neovim',
         plugins = {
           {
             name = '@vue/typescript-plugin',
-            location = '/opt/homebrew/lib/node_modules/@vue/typescript-plugin',
+            location = '/home/kennyt/.local/lib/node_modules/@vue/typescript-plugin',
             languages = { 'javascript', 'typescript', 'vue' },
           },
         },
@@ -80,33 +81,12 @@ return {
         }
         return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname)
       end,
-      -- TODO: I wanted to configure the lsp with a python environment based on the shebang, but it seems like pyright
-      -- doesn't recognize the --pythonPath or --pythonVersion args, and setting it in the config doesn't seem to work either...
-
-      -- on_new_config = function(new_config, new_root_dir)
-      --   local python_files = vim.fn.glob('*.py', nil, true)
-      --   local grep_cmd = {'grep', '-hoP', '#\\!\\K.*?.*(3(\\.[0-9]+)*)-\\d+'}
-      --   for _, file in ipairs(python_files) do
-      --     table.insert(grep_cmd, file)
-      --   end
-      --   vim.system(grep_cmd, {}, function(out)
-      --     if out.code ~= 0 then
-      --       vim.print(out.stderr)
-      --     else
-      --       local python_paths = vim.split(out.stdout, '\n', {trimempty=true})
-      --       local use_python_path = python_paths[1]
-      --       for _, python_path in ipairs(python_paths) do
-      --         if python_path ~= use_python_path then
-      --           vim.print('Found different shebangs in this directory, please verify if intended...')
-      --           vim.print(python_path .. ' vs ' .. use_python_path)
-      --         end
-      --       end
-      --       local python_version = use_python_path:match('3%.%d+')
-      --       new_config['settings']['python'] = {pythonPath = use_python_path, pythonVersion = python_version}
-      --       vim.print(vim.inspect(new_config))
-      --     end
-      --   end)
-      -- end
+      on_new_config = function(new_config, _)
+        new_config.settings.python = { pythonPath = '/home/utils/Python/builds/3.11.9-20240801/bin/python3.11' }
+        new_config.settings.basedpyright.analysis.extraPaths = {
+          '/home/scratch.kennyt_gpu/gpu_t2/hw/nvgpu/fcarch/lib',
+        }
+      end
     },
     lua_ls = {
       -- cmd = {...},
