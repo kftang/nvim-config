@@ -4,6 +4,8 @@
 --
 --
 
+-- enable virtual text
+vim.diagnostic.config({ virtual_text = true })
 
 -- TIP: Disable arrow keys in normal mode
 vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')

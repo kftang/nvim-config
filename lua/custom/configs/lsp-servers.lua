@@ -2,7 +2,10 @@ local util = require 'lspconfig.util'
 
 return {
   non_mason = {
-    ccls = {}
+    -- ccls = {
+    --   init_options = {
+    --   }
+    -- }
   },
   mason = {
     -- clangd = {},
@@ -81,11 +84,23 @@ return {
         }
         return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname)
       end,
-      on_new_config = function(new_config, _)
-        new_config.settings.python = { pythonPath = '/home/utils/Python/builds/3.11.9-20240801/bin/python3.11' }
-        new_config.settings.basedpyright.analysis.extraPaths = {
-          '/home/scratch.kennyt_gpu/gpu_t2/hw/nvgpu/fcarch/lib',
-        }
+      on_new_config = function(new_config, new_root_dir)
+        if vim.uv.fs_stat(new_root_dir .. '/.venv') then
+          new_config.settings.python = { pythonPath = '.venv/bin/python' }
+          -- kind of a hack, but include the packages in venv above fcarch/lib for nvregress
+          new_config.settings.basedpyright.analysis.extraPaths = {
+            '.venv/lib/python3.11/site-packages',
+            '.venv/lib/python3.13/site-packages',
+            '.venv/lib/python3.14/site-packages',
+            '/home/scratch.kennyt_gpu/gpu_t2/hw/nvgpu/fcarch/lib',
+          }
+        else
+          new_config.settings.python = { pythonPath = '/home/utils/Python/builds/3.11.9-20240801/bin/python3.11' }
+          new_config.settings.basedpyright.analysis.extraPaths = {
+            '/home/scratch.kennyt_gpu/gpu_t2/hw/nvgpu/fcarch/lib',
+          }
+        end
+        new_config.settings.basedpyright.analysis.typeCheckingMode = 'basic'
       end
     },
     lua_ls = {
