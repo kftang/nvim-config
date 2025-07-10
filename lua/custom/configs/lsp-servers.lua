@@ -6,6 +6,7 @@ return {
     --   init_options = {
     --   }
     -- }
+    clangd = {}
   },
   mason = {
     -- clangd = {},
