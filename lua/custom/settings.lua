@@ -103,6 +103,20 @@ vim.api.nvim_create_user_command('Vrc', 'edit ' .. vim.fn.stdpath('config') .. '
 vim.api.nvim_create_user_command('Resource', 'source ' .. vim.fn.stdpath('config') .. '/lua/custom/settings.lua', {})
 vim.api.nvim_create_user_command('SaveSession', 'mksession! .session.vim', {})
 vim.api.nvim_create_user_command('SS', 'SaveSession', {})
+vim.api.nvim_create_user_command('DisableConform', function(args)
+    if args.args == 'global' then
+        vim.g.noformat = true
+    else
+        vim.b.noformat = true
+    end
+end, {})
+vim.api.nvim_create_user_command('EnableConform', function(args)
+    if args.args == 'global' then
+        vim.g.noformat = false
+    else
+        vim.b.noformat = false
+    end
+end, {})
 
 -- Opens a diff of the current buffer ran through autopep8 (--agressive)
 vim.api.nvim_create_user_command('DiffRuff', function()

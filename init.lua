@@ -744,9 +744,11 @@ require('lazy').setup({
         local disable_filetypes = { c = true, cpp = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
+        elseif vim.g.noformat or vim.b[bufnr].noformat then
+          return nil
         else
           return {
-            timeout_ms = 1000,
+            timeout_ms = 5000,
             lsp_format = 'fallback',
           }
         end

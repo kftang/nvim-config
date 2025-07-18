@@ -1,10 +1,31 @@
--- FileChangedRO
+-- autocmds for p4
 vim.api.nvim_create_augroup('p4', {})
+vim.api.nvim_create_autocmd('BufReadPost', {
+  group = 'p4',
+  desc = 'Check if file is in depot to prompt to edit file',
+  callback = function(data)
+    local file = data.file
+    vim.system({'p4', '-ztag', '-Mj', 'have', file}, { text = true, timeout = 1000 }, function(result)
+      vim.b.p4 = false
+      if result.code == 0 then
+        local result_json = vim.json.decode(result.stdout)
+        if result_json.depotFile then
+          vim.b.p4 = true
+          vim.b.p4_path = result_json.depotFile
+        end
+      end
+    end)
+  end
+})
+
 vim.api.nvim_create_autocmd('FileChangedRO', {
   group = 'p4',
   desc = 'p4 edit prompt',
   callback = function(data)
-    local file = data['file']
+    if not vim.b.p4 then
+      return
+    end
+    local file = data.file
     vim.ui.input({ prompt = 'Open ' .. file .. ' for edit in p4? [y]/n:', default = 'y' }, function(input)
       if input ~= 'y' then
         return
@@ -19,7 +40,7 @@ vim.api.nvim_create_autocmd('FileChangedRO', {
       end
     end)
   end,
-});
+})
 
 -- p4 commands
 vim.api.nvim_create_user_command('P4edit', '!p4 edit %', {})
@@ -37,6 +58,7 @@ vim.api.nvim_create_user_command('P4diff', function()
     end
   end)
 end, {})
+
 vim.api.nvim_create_user_command('P4revert', '!p4 revert %', {})
 vim.api.nvim_create_user_command('P4change', function(opts)
   local last_buffer = vim.api.nvim_get_current_buf()
