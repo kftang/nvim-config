@@ -15,7 +15,9 @@ return {
     dependencies = {
       'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
     },
-    init = function() vim.g.barbar_auto_setup = false end,
+    init = function()
+      vim.g.barbar_auto_setup = false
+    end,
     config = function()
       require('barbar').setup {
         -- lazy.nvim will automatically call setup for you. put your options here, anything missing will use the default:
@@ -42,7 +44,7 @@ return {
     'nvim-neo-tree/neo-tree.nvim',
     branch = 'v3.x',
     config = function()
-      require('neo-tree').setup{}
+      require('neo-tree').setup {}
       local opts = { noremap = true, silent = true }
       vim.keymap.set('n', '<leader>ft', ':Neotree toggle<CR>', opts)
       vim.keymap.set('n', '<leader>ff', ':Neotree reveal<CR>', opts)
@@ -70,5 +72,9 @@ return {
       'rcarriga/nvim-notify',
     },
   },
-}
 
+  -- https://github.com/nvim-treesitter/nvim-treesitter-context
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+  },
+}
