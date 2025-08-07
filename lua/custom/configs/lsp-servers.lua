@@ -48,24 +48,41 @@ return {
     --     return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname)
     --   end,
     -- },
-    volar = {},
-    ts_ls = {
-      init_options = {
-        hostInfo = 'neovim',
-        plugins = {
-          {
-            name = '@vue/typescript-plugin',
-            location = '/home/kennyt/.local/lib/node_modules/@vue/typescript-plugin',
-            languages = { 'javascript', 'typescript', 'vue' },
+    vtsls = {
+      settings = {
+        vtsls = {
+          tsserver = {
+            globalPlugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server',
+                languages = { 'vue' },
+                configNamespace = 'typescript',
+              },
+            },
           },
         },
       },
-      filetypes = {
-        'javascript',
-        'typescript',
-        'vue',
-      },
+      filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
     },
+    vue_ls = {},
+    -- ts_ls = {
+    --   init_options = {
+    --     hostInfo = 'neovim',
+    --     plugins = {
+    --       {
+    --         name = '@vue/typescript-plugin',
+    --         location = '/home/kennyt/.local/lib/node_modules/@vue/typescript-plugin',
+    --         languages = { 'javascript', 'typescript', 'vue' },
+    --       },
+    --     },
+    --   },
+    --   filetypes = {
+    --     'javascript',
+    --     'typescript',
+    --     'vue',
+    --   },
+    -- },
     basedpyright = {
       root_dir = function(fname)
         -- check if in **/fcarch/scripts, if so the root dir should be cwd
