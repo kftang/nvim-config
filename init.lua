@@ -253,7 +253,7 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  { 'NMAC427/guess-indent.nvim', opts = {} }, -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -705,8 +705,9 @@ require('lazy').setup({
       -- allow for server-specific overrides.
       for server_name, server_config in pairs(servers.mason) do
         server_config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_config.capabilities or {})
-        require('lspconfig')[server_name].setup(server_config)
+        vim.lsp.config(server_name, server_config)
       end
+      require('mason-lspconfig').setup()
       -- require('mason-lspconfig').setup {
       --   ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
       --   automatic_installation = false,
@@ -724,7 +725,8 @@ require('lazy').setup({
 
       -- setup non-mason based lsp servers
       for server_name, config in pairs(servers.non_mason) do
-        require('lspconfig')[server_name].setup(config)
+        vim.lsp.config(server_name, config)
+        vim.lsp.enable(server_name)
       end
     end,
   },
