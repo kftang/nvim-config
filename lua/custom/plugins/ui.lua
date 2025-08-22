@@ -76,5 +76,10 @@ return {
   -- https://github.com/nvim-treesitter/nvim-treesitter-context
   {
     'nvim-treesitter/nvim-treesitter-context',
+    config = function()
+      require('treesitter-context').setup {}
+      local opts = { noremap = true, silent = true }
+      vim.keymap.set('n', '<leader>tc', ':TSContext toggle<CR>', opts)
+    end
   },
 }
