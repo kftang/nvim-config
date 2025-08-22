@@ -84,6 +84,9 @@ local opts = { noremap = true, silent = true }
 -- toggle wrap
 vim.keymap.set('n', '<leader>tw', function() vim.o.wrap = not vim.o.wrap end, opts)
 
+-- use D as d but not storing the deleted text to any registers in visual mode
+vim.keymap.set('x', 'D', '"_d')
+
 -- copy path to buffer
 local function copy_buffer_path()
   local buffer_path = vim.fn.expand('%:p')
