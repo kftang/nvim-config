@@ -2,24 +2,10 @@ local util = require 'lspconfig.util'
 
 return {
   non_mason = {
-    -- ccls = {
-    --   init_options = {
-    --   }
-    -- }
     clangd = {}
   },
   mason = {
-    -- clangd = {},
-    -- gopls = {},
     -- rust_analyzer = {},
-    -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-    --
-    -- Some languages (like typescript) have entire language plugins that can be useful:
-    --    https://github.com/pmizio/typescript-tools.nvim
-    --
-    -- But for many setups, the LSP (`tsserver`) will work just fine
-    -- tsserver = {},
-    --
     -- ruff = {
     --   root_dir = function(fname)
     --     local root_files = {
@@ -66,25 +52,9 @@ return {
       filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
     },
     vue_ls = {},
-    -- ts_ls = {
-    --   init_options = {
-    --     hostInfo = 'neovim',
-    --     plugins = {
-    --       {
-    --         name = '@vue/typescript-plugin',
-    --         location = '/home/kennyt/.local/lib/node_modules/@vue/typescript-plugin',
-    --         languages = { 'javascript', 'typescript', 'vue' },
-    --       },
-    --     },
-    --   },
-    --   filetypes = {
-    --     'javascript',
-    --     'typescript',
-    --     'vue',
-    --   },
-    -- },
     basedpyright = {
-      root_dir = function(fname)
+      root_dir = function(buf, on_dir)
+        local fname = vim.api.nvim_buf_get_name(buf)
         -- check if in **/fcarch/scripts, if so the root dir should be cwd
         local script_dir = fname:match('(.*/fcarch/scripts/%w+)/')
         if script_dir ~= nil then
@@ -100,9 +70,12 @@ return {
           '__pycache__',
           '__init__.py',
         }
-        return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname)
+        local git_root = vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
+        local root_dir = util.root_pattern(unpack(root_files))(fname) or git_root
+        on_dir(root_dir)
       end,
-      on_new_config = function(new_config, new_root_dir)
+      before_init = function(_, new_config)
+        local new_root_dir = new_config.root_dir
         if vim.uv.fs_stat(new_root_dir .. '/.venv') then
           new_config.settings.python = { pythonPath = '.venv/bin/python' }
           -- kind of a hack, but include the packages in venv above fcarch/lib for nvregress
